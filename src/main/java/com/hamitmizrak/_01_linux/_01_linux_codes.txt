@@ -1,0 +1,59 @@
+------------------------------------------------------------------------------
+Linux İşletim sistemi 2 temel yapıdan oluşur.
+1-) Kernel (Çekirdek): Yazılı ile donanım arasındaki haberleşmeyi sağlar.
+2-) Shell  (Kabuk)   : Kullanıcıdan gelen istekleri kernel(Çekirdek) iletir.
+
+------------------------------------------------------------------------------
+Linux Shell
+bash: Bourne Again Shell: Linux'taki default kabuk
+sh
+ksh
+tcsh
+
+Port
+2^16=65536
+0     <= Well-Know-Port             <= 1023
+1024  <= Register  Port             <= 49151
+49152 <= Dynamics Private Ephemeral <= 65535
+
+sudo ufw status (inactive)
+sudo ufw enable
+sudo ufw allow 22 (SSH)
+sudo -nlptu   (Hangi portlar açık olup olmadığını görürüz.)
+------------------------------------------------------------------------------
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade
+
+sudo apt-get update: Sistemimizde kurulu olan paketlerin şimdiki versiyonlarını ile yeni gelen sürüm versiyonları karşılaştırır ve listeyi güncelliyor.
+
+sudo apt-get upgrade: Sistemimizde kurulu olan paketlerin hepsini son sürümüne yükseltecek
+
+sudo apt-get dist-upgrade: En fazla yetkiye sahip komuttur. Mevcut paketleri günelleme, kernel güncellemesine kadar işlem yapıyor.
+
+------------------------------------------------------------------------------
+GNU: Gnu is not unix
+GPL:
+
+
+------------------------------------------------------------------------------
+Linux Dosya Sistem Yapısı
+cd /
+/boot : Kernel boot edilmesi gerekne dosylar, dizinler içerir.
+/dev  : Fiziksel donanım erişimi dosyalarını bulundurur
+/etc  : Tüm servis ve programların yapılandırılması gerektirecek dosyaları içerir.
+/home : Her local kullanıcının özelliklerini vs barındırdığı dizindir.
+/lib,/lib64  :/boot /bin gibi kütüphaneleri barındırdığı yerdir.
+/media : Harici depolama cihazlarını braındırdığı yer
+/opt   : Uygumaların opsiyonel olarak kullandığı paket bileşeni
+/proc  : Sistem çalışan işlemleri ve kaynakları bilgilerini içerir.
+/root  : Root kullanıcısının dosya dizindir. dikkat /home ile karıştırma
+/tmp   : Geçici dosyalarımızın depolandığı yerdir.
+
+
+
+------------------------------------------------------------------------------
+drwxr-xr-x  18 root root       3320 Feb 28 07:00 dev
+drwxr-xr-x 184 root root      12288 Feb 28 06:53 etc
+drwxr-xr-x   3 root root       4096 Nov 30 07:35 home
+
+

@@ -1,0 +1,2 @@
+Ctrl+Alt+T = Terminal açar
+Ctrl+(+) = Temrinali Büyütmek

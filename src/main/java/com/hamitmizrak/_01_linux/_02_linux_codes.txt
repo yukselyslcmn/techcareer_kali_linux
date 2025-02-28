@@ -1,0 +1,60 @@
+$ sudo apt-get update && sudo apt-get upgrade -y
+$ sudo su
+$ sudo i
+$ reboot
+$ exit
+
+
+$ man mkdir
+$ info mkdir
+$ whereis java
+
+$ clear
+$ exit
+$ pwd
+$ history
+
+$ ls -l   => Dosya veya dizin için yetkileri gösterir(Küüçükten büyüğe9
+$ ls -al  => Gizli dosyaları varsa veya bütün dosyaları göster
+$ ls -lar => Gizli dosya ve büyükten küçüğe doğru sıralamak
+
+$ diff deneme1.sh deneme2.sh
+$
+
+
+$ cd .
+$ cd ..
+$ cd ~
+$ cd /
+$ cd Desktop
+
+$ mkdir deneme1 deneme2
+$ rmdir deneme1
+
+
+
+$ hostname
+$ whoami
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$
+$

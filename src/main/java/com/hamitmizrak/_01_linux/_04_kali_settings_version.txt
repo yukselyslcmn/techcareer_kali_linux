@@ -1,0 +1,32 @@
+username: kali
+password: kali
+
+-- 2016 öncesinde
+username: root
+password: toor
+
+$ setxkbmap tr
+$ xrandr size 1920x1080
+
+$ curl --version
+$ curl google.com
+$ ping google.com
+
+$ sudo apt-get install curl
+$ sudo apt install curl
+$ sudo apt install vim
+
+$ sudo apt autoremove -y (Güncelleme sonrasında kullanılmayan eski paketleri siler)
+$ sudo apt clean (Önbellekte gereksiz dosyları siler)
+$
+$
+
+$ sudo systemctl start servisAdi
+$ sudo systemctl stop  servisAdi
+$ sudo systemctl disable  servisAdi
+$
+$
+$
+$
+$
+
