@@ -1,9 +1,26 @@
+
+
+# ⚠️ Sorumluluk Reddi Beyanı (Disclaimer)
+
+Bu eğitim, **Kali Linux** ve siber güvenlik araçlarının **yasal ve etik kullanımı** konusunda bilgi vermek amacıyla hazırlanmıştır. Eğitim süresince anlatılan tüm teknikler ve araçlar, yalnızca **eğitim, araştırma ve siber güvenlik farkındalığını artırma** amacıyla kullanılmalıdır.
+
+**❗ Önemli:**
+- Eğitimde anlatılan yöntemlerin **kötüye kullanımı**, yetkisiz sistemlere erişim sağlamak veya herhangi bir yasa dışı faaliyet için kullanılması **kesinlikle yasaktır**.
+- Katılımcılar, öğrendikleri bilgileri yalnızca **kendi sorumlulukları** altında kullanmalıdır.
+- Eğitmen ve eğitim platformu, katılımcıların bu bilgileri nasıl kullandığından **sorumlu değildir**.
+
+Unutmayın: **Siber güvenlik bir savunma sanatıdır, saldırı aracı değil!**
+
+**📌 Yasal Uyarı:**  
+Herhangi bir etik dışı veya yasa dışı kullanım, ilgili ülkenin yasalarına göre suç teşkil edebilir ve ciddi yaptırımlara neden olabilir. Bu eğitime katılan herkes, öğrendiği bilgileri yalnızca **yasal sınırlar içinde kullanacağını** kabul etmiş sayılır.
+
+🔹 **Hacklemek değil, güvenliği sağlamak için öğreniyoruz.**  
+🔹 **Sorumluluk tamamen kullanıcıya aittir.**
+---
+
 # Etic Hack(Syber Security)
 [GitHub Link](https://github.com/hamitmizrak/techcareer_kali_linux.git)
 ---
-
-
-
 
 ## Docker Codes
 ```sh 

@@ -78,12 +78,65 @@ git_install() {
 }
 git_install
 
+
 ##########################################################################################
-# Docker
+# Git
 docker_install() {
     sleep 2
     echo -e "\n###### ${DOCKER} ######  "
     read -p "Docker Kurmak ister misiniz ? e/h " dockerInstallResult
+    if [[ $dockerInstallResult== "e" || $dockerInstallResult == "E" ]]; then
+        echo -e "Docker Kurulumu ..."
+        ./countdown.sh
+        echo -e "Docker deployment ..."
+        # Docker Kurulumu
+        echo -e "${BLUE}📂 Docker yükleniyor...${NC}"
+        docker --version
+
+        echo -e "${RED}🗑️ Eski Docker sürümleri kaldırılıyor...${NC}"
+        sudo apt remove docker docker-engine docker.io containerd runc -y
+
+        ./countdown.sh
+        sudo apt update
+
+        ./countdown.sh
+        sudo apt install docker.io -y
+
+        ./countdown.sh
+        sudo systemctl enable --now docker
+
+        ./countdown.sh
+        sudo systemctl start docker
+        sudo systemctl status docker
+        sudo systemctl enable docker
+        sudo systemctl restart docker
+
+        ./countdown.sh
+        sudo usermod -aG docker $USER
+        newgrp docker
+
+        ./countdown.sh
+        docker-compose --version
+        sudo apt install docker-compose -y
+        ls -lah /var/run/docker.sock
+        sudo chmod 666 /var/run/docker.sock
+
+        sudo systemctl restart docker
+        sudo systemctl status docker
+        echo -e "${GREEN}✅ Docker Başarıyla yüklendi! Versiyon:${NC}"
+        git --version
+    else
+        echo -e "Git Kurulmadı Kapatılmadı"
+    fi
+}
+docker_install
+
+##########################################################################################
+# Docker
+docker_install_old() {
+    sleep 2
+    echo -e "\n###### ${DOCKER} ######  "
+    read -p "Docker Eski Srümü Kurmak ister misiniz ? e/h " dockerInstallResult
     if [[ $dockerInstallResult == "e" || $dockerInstallResult == "E" ]]; then
         echo -e "Docker Kurulumu ..."
 
@@ -121,7 +174,7 @@ docker_install() {
         echo -e "Docker Kurulmadı Kapatılmadı"
     fi
 }
-docker_install
+docker_install_old
 
 ##########################################################################################
 # Apache2
