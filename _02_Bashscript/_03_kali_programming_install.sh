@@ -72,15 +72,44 @@ git_install() {
         sudo apt install git -y
         echo -e "${GREEN}✅ Git başarıyla yüklendi! Versiyon:${NC}"
         git --version
+        setxkbmap tr
+        git config --global user.name "hamitmizrak"
+        git config --global user.email "hamitmizrak@gmail.com"
+        Git config --global -l
+
+        sudo apt install openjdk-8-jdk -y
+        java --version
+        javac --version
+
     else
         echo -e "Git Kurulmadı Kapatılmadı"
     fi
 }
 git_install
 
+##########################################################################################
+# Java
+java_install() {
+    sleep 2
+    echo -e "\n###### ${GIT} ######  "
+    read -p "Java Kurmak ister misiniz ? e/h " javaInstallResult
+    if [[ $javaInstallResult == "e" || $javaInstallResult== "E" ]]; then
+        echo -e "Java Kurulumu ..."
+        ./countdown.sh
+        echo -e "Java deployment ..."
+        # Java Kurulumu
+        setxkbmap tr
+        sudo apt install openjdk-8-jdk -y
+        java --version
+        javac --version
+    else
+        echo -e "Java Kurulmadı Kapatılmadı"
+    fi
+}
+java_install
 
 ##########################################################################################
-# Git
+# Docker
 docker_install() {
     sleep 2
     echo -e "\n###### ${DOCKER} ######  "
