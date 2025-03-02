@@ -163,27 +163,129 @@ $ service xrdp start
 ```
 ---
 
+
+## Kali Linux
+```sh 
+
+```
+---
+
+
+## Kali Linux
+```sh 
+
+```
+---
+
+
+## Kali Linux
+```sh 
+
+```
+---
+
+
+
 ## TLS
 ```sh 
 
 ```
 ---
 
+### **TLS (Transport Layer Security) Nedir?**
+**TLS (Transport Layer Security)**, internet üzerinden güvenli iletişimi sağlamak için kullanılan bir **kriptografik protokoldür**. İnternet üzerindeki verilerin **gizliliğini, bütünlüğünü ve kimlik doğrulamasını** sağlayarak, saldırılara karşı koruma sunar.
+
+---
+
+## **1. TLS Ne İşe Yarar?**
+TLS, özellikle **web tarayıcıları ve sunucular** arasındaki iletişimde, e-postalarda, VoIP (sesli iletişim), mesajlaşma ve VPN gibi birçok farklı uygulamada kullanılır. **HTTPS (HTTP Secure)** protokolü de aslında **HTTP + TLS** kombinasyonudur.
+
+TLS, şu üç temel güvenlik fonksiyonunu sağlar:
+
+1. **Şifreleme (Encryption)** – Verilerin üçüncü taraflarca okunmasını engeller.
+2. **Kimlik Doğrulama (Authentication)** – Karşı tarafın gerçek olup olmadığını doğrular (Örneğin, bir web sitesinin sahte olup olmadığını anlamak için).
+3. **Bütünlük (Integrity)** – Verilerin iletim sırasında değiştirilmediğini garantiler.
+
+---
+
+## **2. TLS Nasıl Çalışır? (Handshake Süreci)**
+TLS, istemci (örneğin bir web tarayıcısı) ve sunucu arasında güvenli bir bağlantı kurmak için **TLS Handshake** adı verilen bir süreçten geçer:
+
+1. **İstemci, sunucuya "Merhaba" (ClientHello) der:** Desteklediği şifreleme algoritmalarını ve diğer bilgileri gönderir.
+2. **Sunucu yanıt verir (ServerHello):** Kullanılacak şifreleme algoritmasını belirler ve kendi sertifikasını (SSL/TLS sertifikası) gönderir.
+3. **İstemci, sertifikayı doğrular:** Sertifika geçerliyse, istemci bir anahtar oluşturur ve sunucuya güvenli şekilde iletir.
+4. **Şifreli iletişim başlar:** Artık iki taraf da ortak bir şifreleme anahtarı kullanarak güvenli veri iletişimi yapar.
+
+---
+
+## **3. TLS ve SSL Farkı Nedir?**
+**SSL (Secure Sockets Layer)**, TLS'in eski versiyonudur. SSL 2.0 ve 3.0 sürümleri güvenlik açıkları nedeniyle kullanımdan kaldırılmıştır. Günümüzde **TLS 1.2 ve TLS 1.3** sürümleri aktif olarak kullanılmaktadır.
+
+### **SSL vs TLS Karşılaştırması:**
+| Özellik       | SSL | TLS |
+|--------------|-----|-----|
+| İlk Çıkış Tarihi | 1995 | 1999 |
+| Kullanım Durumu | Eski ve güvensiz | Modern ve güvenli |
+| Güncel Versiyon | SSL 3.0 (Desteklenmiyor) | TLS 1.2 / TLS 1.3 |
+| Hız ve Performans | Daha yavaş | Daha hızlı, düşük gecikme süresi |
+| Güvenlik Açıkları | Poodle, BEAST gibi zafiyetler içerir | Daha güvenli |
+
+Günümüzde **SSL yerine TLS kullanılması önerilir.** Tarayıcılar ve sunucular artık SSL'i desteklememektedir.
+
+---
+
+## **4. TLS 1.2 ve TLS 1.3 Arasındaki Farklar**
+Şu anda en güncel ve güvenli TLS sürümü **TLS 1.3**'tür. **TLS 1.2'ye göre daha hızlı ve güvenlidir.**
+
+| Özellik       | TLS 1.2 | TLS 1.3 |
+|--------------|--------|--------|
+| Handshake Süresi | Daha uzun | Daha hızlı |
+| Şifreleme Algoritmaları | RSA, AES, SHA vb. | Daha güçlü algoritmalar |
+| Güvenlik Açıkları | Daha fazla | Daha güvenli |
+
+TLS 1.3, özellikle **daha az el sıkışma süreci ve modern kriptografi algoritmaları** ile performans ve güvenlik açısından büyük iyileştirmeler getirir.
+
+---
+
+## **5. TLS Nerelerde Kullanılır?**
+TLS, internet üzerindeki birçok farklı alanda güvenliği sağlamak için kullanılır:
+
+- **Web Siteleri (HTTPS)**
+- **E-posta İletişimi (SMTP, IMAP, POP3)**
+- **VPN ve Uzak Bağlantılar**
+- **VoIP (Sesli Aramalar)**
+- **Mesajlaşma Uygulamaları (WhatsApp, Signal, Telegram gibi)**
+- **Online Ödemeler ve Bankacılık Sistemleri**
+
+---
+
+## **6. TLS Güvenlik Açıkları ve Saldırı Türleri**
+Her ne kadar TLS güvenliği sağlasa da, yanlış yapılandırma ve eski sürümlerin kullanımı bazı saldırılara yol açabilir:
+
+- **Man-in-the-Middle (MitM) Saldırısı**: Saldırgan, istemci ve sunucu arasındaki iletişimi keserek verileri okuyabilir.
+- **TLS Stripping**: HTTP'yi zorla kullanarak HTTPS bağlantısını devre dışı bırakabilir.
+- **POODLE Saldırısı**: Eski SSL 3.0 protokolünü kullanan sistemleri hedef alır.
+- **Downgrade Saldırıları**: Güvenli TLS 1.3 yerine zayıf TLS 1.0/1.1’e düşürerek saldırıları mümkün kılar.
+
+### **Güvenliği Sağlamak İçin Yapılması Gerekenler**
+✔ **TLS 1.3 veya en azından TLS 1.2 kullanın**  
+✔ **Zayıf şifreleme algoritmalarını devre dışı bırakın**  
+✔ **Geçerli bir SSL/TLS sertifikası kullanın**  
+✔ **HTTP yerine HTTPS zorunlu hale getirin**  
+✔ **HSTS (HTTP Strict Transport Security) kullanın**
+
+---
+
+## **Sonuç**
+TLS, internet üzerindeki **güvenli iletişimin temel taşıdır**. Günümüzde, güvenliği sağlamak için **SSL yerine TLS 1.2 ve TLS 1.3 kullanımı** önerilir. Web siteleri, e-posta servisleri, VPN bağlantıları ve finansal işlemler gibi birçok kritik alanda kullanılır.
+
+**Kısacası, TLS internet dünyasında güvenliğin olmazsa olmazıdır!** 🚀
+
 ## Kali Linux
 ```sh 
 
 ```
 ---
 
-## Kali Linux
-```sh 
 
-```
----
-
-## Kali Linux
-```sh 
-
-```
----
 
