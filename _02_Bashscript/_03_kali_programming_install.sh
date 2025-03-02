@@ -65,14 +65,13 @@ git_install() {
     read -p "Git Kurmak ister misiniz ? e/h " gitInstallResult
     if [[ $gitInstallResult == "e" || $gitInstallResult == "E" ]]; then
         echo -e "Git Kurulumu ..."
-      ./countdown.sh
-      echo -e "Git deployment ..."
-       # Git Kurulumu
+        ./countdown.sh
+        echo -e "Git deployment ..."
+        # Git Kurulumu
         echo -e "${BLUE}📂 Git yükleniyor...${NC}"
         sudo apt install git -y
         echo -e "${GREEN}✅ Git başarıyla yüklendi! Versiyon:${NC}"
         git --version
-
     else
         echo -e "Git Kurulmadı Kapatılmadı"
     fi
@@ -118,7 +117,6 @@ docker_install() {
       echo -e "${GREEN}✅ Docker başarıyla yüklendi! Versiyon:${NC}"
       docker container run hello-world
       docker --version
-
     else
         echo -e "Docker Kurulmadı Kapatılmadı"
     fi
@@ -133,37 +131,36 @@ apache2_install() {
     read -p "Apache2 Kurmak ister misiniz ? e/h " apache2Result
     if [[ $apache2Result == "e" || $apache2Result == "E" ]]; then
         echo -e "Apache2 Kurulumu ..."
+        echo "🚀 Kali Linux için Apache2 Kurulumu Başlıyor..."
 
-    echo "🚀 Kali Linux için Apache2 Kurulumu Başlıyor..."
+        # Sistem güncelleme
+        echo "🔄 Paket listesi güncelleniyor..."
+        sudo apt update -y
 
-    # Sistem güncelleme
-    echo "🔄 Paket listesi güncelleniyor..."
-    sudo apt update -y
+        #!/bin/bash
 
-    #!/bin/bash
+        echo "🚀 Kali Linux için Apache2 Kurulumu Başlıyor..."
 
-    echo "🚀 Kali Linux için Apache2 Kurulumu Başlıyor..."
+        # Sistem güncelleniyor
+        echo "🔄 Paket listesi güncelleniyor..."
+        sudo apt update -y
 
-    # Sistem güncelleniyor
-    echo "🔄 Paket listesi güncelleniyor..."
-    sudo apt update -y
+        # Apache2 Kurulumu
+        echo "📦 Apache2 yükleniyor..."
+        sudo apt install apache2 -y
 
-    # Apache2 Kurulumu
-    echo "📦 Apache2 yükleniyor..."
-    sudo apt install apache2 -y
+        # Apache2 Servisini Başlatma
+        echo "🟢 Apache2 başlatılıyor..."
+        sudo systemctl start apache2
+        sudo systemctl enable apache2
 
-    # Apache2 Servisini Başlatma
-    echo "🟢 Apache2 başlatılıyor..."
-    sudo systemctl start apache2
-    sudo systemctl enable apache2
-
-    # Apache Çalışıyor mu Kontrol
-    echo "🔎 Apache2 servis durumu kontrol ediliyor..."
-    if systemctl is-active --quiet apache2; then
-        echo "✅ Apache2 başarıyla çalışıyor!"
-    else
-        echo "❌ Apache2 başlatılamadı. Lütfen hata loglarını kontrol edin."
-        exit 1
+        # Apache Çalışıyor mu Kontrol
+        echo "🔎 Apache2 servis durumu kontrol ediliyor..."
+        if systemctl is-active --quiet apache2; then
+            echo "✅ Apache2 başarıyla çalışıyor!"
+        else
+            echo "❌ Apache2 başlatılamadı. Lütfen hata loglarını kontrol edin."
+            exit 1
     fi
 
     # Varsayılan Web Sayfası Oluşturma
@@ -198,7 +195,6 @@ php_install() {
         echo "🎉 Apache2 ve PHP başarıyla kuruldu! Tarayıcıdan şu adresleri kontrol edin:"
         echo "👉 http://localhost (Ana Sayfa)"
         echo "👉 http://localhost/info.php (PHP Testi)"
-
         exit 0
     else
         echo -e "❌ Php Kurulmadı"
