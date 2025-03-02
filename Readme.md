@@ -29,6 +29,27 @@ docker-compose.yml dosyasını çalıştırırken eğer "Git bash Here" ile çal
 ```
 ---
 
+
+## Windowsta Docker Kurulu olduğundan Emin olunuz
+```sh 
+$ docker --version
+$ sudo apt update
+$ sudo apt install docker.io -y
+$ sudo systemctl enable --now docker
+$ sudo systemctl start docker
+$ sudo systemctl status docker
+$ sudo systemctl enable docker
+$ sudo systemctl restart docker
+
+$ Docker: Yeni IP Almak
+$ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' kali_container
+
+Yukarıdaki Komutla docker container üzerienden SSHb bağlanmayı sağlayacak
+```
+---
+
+
+
 ##  Windows on Docker with Kali Linux (2.YOL)
 ```sh 
 ls -lar
@@ -41,6 +62,11 @@ docker exec -it kali_container /bin/bash
 docker exec -it kali_container /bin/sh
 
 $ apt update && apt upgrade -y
+$ dpkg -l | grep openssh-server
+$ apt update && apt install -y openssh-server
+$ service ssh start
+$ systemctl enable ssh
+$ dpkg -l | grep openssh-server
 
 $ apt install -y kali-linux-default kali-linux-headless sudo wget vim net-tools nmap
 $ ENTER
@@ -55,6 +81,12 @@ $ service ssh start  #(Starting OpenBSD Secure Shell server: sshd.)
 $ passwd root  # Root güçlü parola veriniz, ancak ben eğitimde olduğum için root vereceğim.
 $ root         #
 $ systemctl enable ssh
+
+$ vim /etc/ssh/sshd_config
+22 
+PermitRootLogin yes
+PasswordAuthentication yes
+
 
 Dikkat: IP bulmak istiyorsak, docker-desktop > Container > Inspect > Networks > IP ÖĞREN
 $ ssh root@172.19.0.2 -p 22   (1.SEÇENEK)

@@ -111,6 +111,4 @@ $ sudo lastb         (Kullanıcıların başarısız girişimlerinden de kullan�
 $ sudo apt install net-tools
 $ ifconfig      (ip)
 $ netdsicover   (O anda cihazlardaki IP adreslerini göster)
-$
-$
-$
+
