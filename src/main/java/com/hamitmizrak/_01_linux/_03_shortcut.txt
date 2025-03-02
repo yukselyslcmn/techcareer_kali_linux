@@ -1,2 +1,4 @@
+Sanal Makine > Preferences > input > machine Machine > Host Key Combo
+AltGR +f   = Sanal Makinede tam ekran modu
 Ctrl+Alt+T = Terminal açar
-Ctrl+(+) = Temrinali Büyütmek
+Ctrl+(+)   = Temrinali Büyütmek

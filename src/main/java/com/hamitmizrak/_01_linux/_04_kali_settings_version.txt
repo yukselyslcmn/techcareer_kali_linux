@@ -18,15 +18,11 @@ $ sudo apt install vim
 
 $ sudo apt autoremove -y (Güncelleme sonrasında kullanılmayan eski paketleri siler)
 $ sudo apt clean (Önbellekte gereksiz dosyları siler)
-$
-$
 
 $ sudo systemctl start servisAdi
 $ sudo systemctl stop  servisAdi
 $ sudo systemctl disable  servisAdi
 $
-$
-$
-$
-$
+
+
 
