@@ -1,0 +1,47 @@
+version: '3.8' # Docker Compose'un kullanılacak sürümü belirleniyor.
+
+# Services
+services:
+  kali-linux: # Kali Linux servisini tanımlıyoruz.
+    container_name: kali_container # Konteynerin adını belirliyoruz.
+    image: kalilinux/kali-rolling # Kullanılacak Docker imajını belirtiyoruz.
+    restart: unless-stopped # Konteyner durdurulmadığı sürece yeniden başlatılacak.
+    stdin_open: true # Standart girdi (stdin) açık bırakılarak etkileşim sağlanıyor.
+    tty: true # Terminal giriş/çıkış (TTY) desteği etkinleştiriliyor.
+    privileged: true # Konteynerin root ayrıcalıklarıyla çalışmasına izin veriliyor.
+    environment:
+      - TZ=Europe/Istanbul # Konteynerin saat dilimi İstanbul olarak ayarlanıyor.
+    volumes:
+      - kali_data:/root # Konteyner içindeki /root dizini ile yerel bir hacim bağlanıyor.
+    networks:
+      - kali_network # Konteyneri kali_network ağına bağlanıyor.
+    ports:
+      - "2222:22" # SSH için port yönlendirmesi (Host 2222 -> Container 22).
+      - "8080:80" # HTTP için port yönlendirmesi (Host 8080 -> Container 80).
+      - "443:443" # HTTPS için port yönlendirmesi (Host 443 -> Container 443).
+    command: ["/bin/sh"] # Konteyner çalıştırıldığında /bin/sh kabuğu açılıyor.
+    cap_add:
+      - NET_ADMIN # Ağ yönetimi ile ilgili ek yetkiler sağlanıyor.
+      - SYS_ADMIN # Sistem yöneticisi yetkileri ekleniyor.
+    security_opt:
+      - seccomp:unconfined # Güvenlik politikası gevşetilerek tüm sistem çağrılarına izin veriliyor.
+
+# Networks
+networks:
+  kali_network:
+    driver: bridge # Köprü (bridge) ağı oluşturuluyor.
+
+# Volumes: Kalıcılık(Persistence)
+volumes:
+  kali_data: # Konteynerin kalıcı veri depolaması için bir hacim oluşturuluyor.
+
+
+##########################################################################################
+##########################################################################################
+# docker-compose up
+# docker-compose up -d
+# docker ps
+# docker-compose up
+# docker-compose up -d
+# docker exec -it kali_container /bin/bash
+# docker exec -it kali_container /bin/sh
