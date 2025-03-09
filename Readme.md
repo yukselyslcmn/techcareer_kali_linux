@@ -33,6 +33,40 @@ docker-compose down
 ```
 ---
 
+## OpenVPN
+```sh 
+sudo apt install openvpn easy-rsa -y
+
+sudo openvpn --config ~/Desktop/TryHackme/pythonsoftware.ovpn & disown
+Veya
+sudo openvpn --config ~/Documents/pythonsoftware.ovpn --dev tun0
+
+ip a | grep tun0
+sudo systemctl start openvpn@server
+sudo systemctl status openvpn@server
+sudo systemctl stop openvpn@server
+sudo systemctl enable openvpn@server
+
+http://10.10.10.10
+```
+---
+
+## OpenVPN
+```sh 
+sudo systemctl start openvpn@server	    => OpenVPN sunucusunu başlatır.
+sudo systemctl stop openvpn@server	    => OpenVPN sunucusunu durdurur.
+sudo systemctl restart openvpn@server	=> OpenVPN sunucusunu yeniden başlatır.
+sudo systemctl status openvpn@server	=> OpenVPN sunucu durumunu kontrol eder.
+sudo openvpn --config client.ovpn	    => OpenVPN istemcisini başlatır.
+sudo ufw allow 1194/udp	                =>OpenVPN bağlantı portunu açar.
+`ip a	grep tun0`
+curl ifconfig.me	                    => IP adresinizi kontrol eder (VPN çalışıyorsa farklı IP göstermelidir).
+```
+---
+
+
+
+
 ## Windows on Docker with Kali Linux (1.YOL)
 ```sh 
 docker pull kalilinux/kali-rolling
@@ -389,6 +423,418 @@ VPN bağlantısında farklı **şifreleme ve tünelleme protokolleri** kullanıl
 ⚠️ **Ancak kötü VPN seçimleri verilerinizi riske atabilir!** Bu yüzden **ücretsiz ve güvenilir olmayan VPN servislerinden kaçının.**
 
 
+## Open VPN 
+```sh 
+
+```
+---
+# **OpenVPN Nedir? – Detaylı Açıklama**
+## **1. OpenVPN Nedir?**
+**OpenVPN**, açık kaynaklı, **güvenli, esnek ve güçlü bir VPN (Virtual Private Network) protokolü ve yazılımıdır**. **TLS (Transport Layer Security) ve SSL (Secure Sockets Layer) şifreleme teknolojilerini kullanarak güvenli bir ağ tünelleme bağlantısı sağlar.**
+
+OpenVPN, **kullanıcıları gizlilik, güvenlik ve ağ erişimi konularında koruyan** bir VPN çözümüdür ve en çok tercih edilen VPN teknolojilerinden biridir.
+
+**Öne Çıkan Özellikleri:**
+- **Açık kaynaklıdır**, yani herkes tarafından incelenebilir ve geliştirilebilir.
+- **AES-256 gibi güçlü şifreleme algoritmalarını destekler**.
+- **TCP ve UDP protokolleriyle çalışabilir**.
+- **Karmaşık ağ yapılandırmalarını destekler** (Site-to-Site VPN, Client-to-Server VPN vb.).
+- **Linux, Windows, macOS, Android ve iOS gibi tüm işletim sistemlerinde çalışır**.
+
+---
+
+## **2. OpenVPN Nasıl Çalışır?** 23
+OpenVPN, **istemci ve sunucu modeli** kullanarak çalışır:
+1. **OpenVPN sunucusu**, belirli bir IP aralığını yöneten ve istemcilerin bağlanmasına izin veren merkezi bir noktadır.
+2. **OpenVPN istemcisi**, sunucuya bağlanarak VPN tünelini oluşturur ve belirlenen ağ üzerinden güvenli bir bağlantı sağlar.
+3. **Bağlantı şifrelenir ve trafiğiniz güvenli bir şekilde yönlendirilir**.
+
+---
+
+## **3. OpenVPN Kurulumu (Linux)**
+Aşağıdaki adımlar OpenVPN’in nasıl kurulacağını ve yapılandırılacağını gösterir.
+
+### **🔹 3.1. OpenVPN Sunucusunu Kurma (Ubuntu/Debian)**
+Öncelikle, OpenVPN ve gerekli bağımlılıkları yükleyin:
+```bash
+sudo apt update
+sudo apt install openvpn easy-rsa -y
+```
+
+Easy-RSA, OpenVPN için **sertifika ve anahtar yönetimini** sağlayan bir araçtır.
+
+Ardından, OpenVPN konfigürasyon dizinine gidin:
+```bash
+cd /etc/openvpn
+```
+
+**Sunucu yapılandırma dosyasını oluşturun:**
+```bash
+sudo cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+sudo gunzip /etc/openvpn/server.conf.gz
+```
+
+**Sunucu yapılandırmasını düzenleyin:**
+```bash
+sudo nano /etc/openvpn/server.conf
+```
+Yapılandırma dosyasında aşağıdaki ayarları bulun ve düzenleyin:
+```ini
+port 1194
+proto udp
+dev tun
+cipher AES-256-CBC
+auth SHA256
+keepalive 10 120
+```
+
+---
+
+### **🔹 3.2. OpenVPN İçin Sertifika ve Anahtar Oluşturma**
+Easy-RSA ile bir **CA (Certificate Authority) oluşturmanız** gerekmektedir:
+
+```bash
+cd /etc/openvpn
+mkdir easy-rsa
+ln -s /usr/share/easy-rsa/* easy-rsa/
+cd easy-rsa
+```
+
+Easy-RSA'yı başlatın:
+```bash
+sudo ./easyrsa init-pki
+sudo ./easyrsa build-ca
+```
+
+Ardından, OpenVPN sunucusu için bir sertifika ve anahtar oluşturun:
+```bash
+sudo ./easyrsa gen-req server nopass
+sudo ./easyrsa sign-req server server
+```
+
+DH parametrelerini oluşturun:
+```bash
+sudo ./easyrsa gen-dh
+```
+
+Tüm dosyaları OpenVPN dizinine kopyalayın:
+```bash
+sudo cp pki/ca.crt pki/private/server.key pki/issued/server.crt pki/dh.pem /etc/openvpn/
+```
+
+---
+
+### **🔹 3.3. OpenVPN Sunucusunu Başlatma**
+OpenVPN servisini başlatın:
+```bash
+sudo systemctl start openvpn@server
+sudo systemctl enable openvpn@server
+```
+
+**Servis durumunu kontrol etmek için:**
+```bash
+sudo systemctl status openvpn@server
+```
+
+Eğer OpenVPN sorunsuz çalışıyorsa, şu tarz bir çıktı görmelisiniz:
+```
+● openvpn@server.service - OpenVPN connection to server
+   Loaded: loaded (/lib/systemd/system/openvpn@.service; enabled; vendor preset: enabled)
+   Active: active (running)
+```
+
+---
+
+## **4. OpenVPN İstemcisini Kurma ve Bağlanma**
+VPN sunucusuna bağlanmak için bir OpenVPN istemcisi kullanmanız gerekir. Bu, **Linux, Windows, macOS veya mobil cihazlar** üzerinden yapılabilir.
+
+### **🔹 4.1. OpenVPN İstemci Kurulumu (Linux)**
+Öncelikle OpenVPN istemcisini yükleyin:
+```bash
+sudo apt update
+sudo apt install openvpn -y
+```
+
+Ardından, OpenVPN sunucusuna bağlanmak için yapılandırma dosyanızı kullanın:
+```bash
+sudo openvpn --config /path/to/client.ovpn
+```
+
+Eğer bağlantı başarılı olursa, şu gibi bir çıktı alırsınız:
+```
+Initialization Sequence Completed
+```
+
+### **🔹 4.2. OpenVPN İstemci Kurulumu (Windows)**
+1. [OpenVPN İstemcisi](https://openvpn.net/community-downloads/) sitesinden Windows için OpenVPN’i indirin ve yükleyin.
+2. **Client .ovpn** dosyanızı **C:\Program Files\OpenVPN\config** dizinine yerleştirin.
+3. **OpenVPN GUI’yi yönetici olarak çalıştırın** ve bağlantıyı başlatın.
+
+### **🔹 4.3. OpenVPN İstemci Kurulumu (Android / iOS)**
+1. **Google Play Store veya App Store'dan "OpenVPN Connect" uygulamasını indirin.**
+2. **Client .ovpn dosyanızı uygulamaya yükleyin.**
+3. **Bağlantıyı başlatın.**
+
+---
+
+## **5. OpenVPN Kullanışlı Komutlar**
+| Komut | Açıklama |
+|--------|------------|
+| `sudo systemctl start openvpn@server` | OpenVPN sunucusunu başlatır. |
+| `sudo systemctl stop openvpn@server` | OpenVPN sunucusunu durdurur. |
+| `sudo systemctl restart openvpn@server` | OpenVPN sunucusunu yeniden başlatır. |
+| `sudo systemctl status openvpn@server` | OpenVPN sunucu durumunu kontrol eder. |
+| `sudo openvpn --config client.ovpn` | OpenVPN istemcisini başlatır. |
+| `sudo ufw allow 1194/udp` | OpenVPN bağlantı portunu açar. |
+| `ip a | grep tun0` | OpenVPN bağlantısını kontrol eder. |
+| `curl ifconfig.me` | IP adresinizi kontrol eder (VPN çalışıyorsa farklı IP göstermelidir). |
+
+---
+
+## **6. OpenVPN Kullanımının Avantajları**
+✅ **Güçlü Şifreleme ve Güvenlik** (AES-256, TLS/SSL)  
+✅ **Açık Kaynaklı ve Özgür Yazılım**  
+✅ **Her Platformda Çalışır (Linux, Windows, macOS, Android, iOS, Routerlar)**  
+✅ **Esnek Konfigürasyonlar (Site-to-Site, Remote Access VPN, Split Tunneling)**  
+✅ **Sansürü ve Coğrafi Engelleri Aşma Yeteneği**
+
+---
+
+## **7. OpenVPN Kullanımının Dezavantajları**
+❌ **Kurulumu ve yönetimi teknik bilgi gerektirir.**  
+❌ **Ücretsiz VPN servislerine kıyasla yapılandırması zaman alır.**  
+❌ **Yanlış yapılandırmalar güvenlik açıklarına neden olabilir.**
+
+---
+
+## **8. Sonuç**
+**OpenVPN, dünyanın en güvenli ve esnek VPN çözümlerinden biridir.**
+- **Gizliliğinizi artırmak, internet sansürünü aşmak ve güvenli bağlantılar oluşturmak için OpenVPN’i kullanabilirsiniz.**
+- **Linux ve Windows üzerinde kolayca çalışabilir ve kendi özel VPN sunucunuzu oluşturabilirsiniz.**
+- **Güçlü şifreleme ve açık kaynaklı olması nedeniyle güvenilir ve özelleştirilebilir bir VPN çözümüdür.** 🚀
+
+## OpenVPN Komutları
+```sh 
+
+```
+---
+
+# **OpenVPN Kullanımı İçin Komutlar ve Açıklamaları**
+
+Bu bölümde, **OpenVPN** ile ilgili temel ve ileri seviye komutları **çok detaylı** şekilde açıklayacağız.  
+Özellikle **Linux sistemlerinde OpenVPN kullanımı**, **servislerin yönetimi**, **bağlantı testleri** ve **gelişmiş kullanım senaryoları** gibi konulara değineceğiz.
+
+---
+
+## **1. Temel OpenVPN Bağlantı Komutları**
+Bu komutlar, **OpenVPN istemcisini manuel olarak çalıştırmak ve bağlanmak için** kullanılır.
+
+### **1.1. OpenVPN’i Arka Planda Çalıştırma**
+```bash
+sudo openvpn --config ~/Documents/pythonsoftware.ovpn & disown
+```
+#### **Komut Açıklaması:**
+- **`sudo openvpn --config ~/Documents/pythonsoftware.ovpn`**
+  - OpenVPN istemcisini çalıştırır ve belirtilen yapılandırma dosyası ile VPN bağlantısı başlatır.
+- **`&`**
+  - Komutu **arka planda çalıştırır**, böylece terminali kullanmaya devam edebilirsiniz.
+- **`disown`**
+  - OpenVPN sürecini **terminal oturumundan bağımsız hale getirir**.
+  - Terminal kapansa bile OpenVPN çalışmaya devam eder.
+
+---
+
+### **1.2. OpenVPN’i Önden Çalıştırma (Terminali Meşgul Eden Mod)**
+```bash
+sudo openvpn --config ~/Documents/pythonsoftware.ovpn
+```
+Bu komut, **ön planda OpenVPN istemcisini çalıştırır**. Eğer terminali kapatırsanız **VPN bağlantısı da kesilir**.
+
+✅ **Avantajı:** Çıktıları anlık olarak görebilir ve hata ayıklamak için kullanabilirsiniz.  
+❌ **Dezavantajı:** Terminali meşgul eder, arka planda çalışmaz.
+
+---
+
+### **1.3. OpenVPN’i `nohup` ile Çalıştırma (Terminalden Bağımsız)**
+```bash
+nohup sudo openvpn --config ~/Documents/pythonsoftware.ovpn > vpn.log 2>&1 &
+```
+#### **Komut Açıklaması:**
+- **`nohup`**
+  - Terminal kapandığında bile OpenVPN’in çalışmaya devam etmesini sağlar.
+- **`> vpn.log 2>&1`**
+  - Çıktıları **vpn.log** dosyasına kaydeder.
+- **`&`**
+  - Arka planda çalıştırır.
+
+✅ **Avantajı:** Terminali kapatsanız bile OpenVPN çalışmaya devam eder.  
+✅ **VPN bağlantısı hakkında logları saklar**, böylece hata ayıklamak kolay olur.
+
+---
+
+### **1.4. OpenVPN’i `screen` ile Çalıştırma (Detach-Resume)**
+```bash
+screen -S myvpn sudo openvpn --config ~/Documents/pythonsoftware.ovpn
+```
+#### **Komut Açıklaması:**
+- **`screen -S myvpn`**
+  - **Yeni bir terminal oturumu (screen session) açar.**
+  - **myvpn** ismi verilen bir oturum oluşturur.
+- **`sudo openvpn --config ~/Documents/pythonsoftware.ovpn`**
+  - OpenVPN bağlantısını başlatır.
+
+🔹 Terminali kapatmak istediğinizde **CTRL + A, ardından D** tuşlarına basarak **screen oturumunu arka plana alabilirsiniz.**  
+🔹 Daha sonra oturuma tekrar bağlanmak için:
+```bash
+screen -r myvpn
+```
+
+✅ **Avantajı:** Terminali kaybetmeden süreç devam eder.  
+✅ **Sunucu bağlantılarında en çok tercih edilen yöntemlerden biridir.**
+
+---
+
+### **1.5. OpenVPN Bağlantısını Belirli Bir Arayüzde Çalıştırma**
+```bash
+sudo openvpn --config ~/Documents/pythonsoftware.ovpn --dev tun0
+```
+Bu komut, OpenVPN bağlantısını **tun0 arayüzü** üzerinden başlatır.  
+**Bazı ağ politikalarında yalnızca belirli bir arayüzden trafik yönlendirmek için gereklidir.**
+
+---
+
+### **1.6. OpenVPN TCP Modunda Çalıştırma**
+```bash
+sudo openvpn --config ~/Documents/pythonsoftware.ovpn --proto tcp
+```
+Eğer VPN bağlantınız **UDP** ile çalışmıyorsa, **TCP protokolüne zorlamak için** bu komutu kullanabilirsiniz.  
+OpenVPN varsayılan olarak UDP (hızlı) kullanır, ancak bazı ağlarda **UDP engellenmiş olabilir**.
+
+---
+
+## **2. OpenVPN Servis Yönetimi (Linux)**
+Linux sistemlerinde OpenVPN **servis olarak çalıştırılabilir**. Böylece **sunucu yeniden başlatıldığında bile** VPN otomatik olarak çalışır.
+
+### **2.1. OpenVPN Servisini Başlatma**
+```bash
+sudo systemctl start openvpn@server
+```
+Bu komut, OpenVPN sunucu servislerini başlatır.
+
+**İstemci için:**
+```bash
+sudo systemctl start openvpn@client
+```
+
+---
+
+### **2.2. OpenVPN Servisini Durdurma**
+```bash
+sudo systemctl stop openvpn@server
+```
+VPN bağlantısını kapatmak için kullanılır.
+
+---
+
+### **2.3. OpenVPN Servisinin Durumunu Kontrol Etme**
+```bash
+sudo systemctl status openvpn@server
+```
+**Servis çalışıyorsa şu çıktıyı alırsınız:**
+```
+● openvpn@server.service - OpenVPN connection to server
+   Active: active (running) since ...
+```
+
+---
+
+### **2.4. OpenVPN Servisini Yeniden Başlatma**
+```bash
+sudo systemctl restart openvpn@server
+```
+VPN servisini yeniden başlatmak için kullanılır.
+
+---
+
+### **2.5. OpenVPN’in Sistem Açılışında Otomatik Çalışmasını Sağlama**
+```bash
+sudo systemctl enable openvpn@server
+```
+Bu komut sayesinde, sistem her açıldığında **VPN otomatik olarak başlar**.
+
+---
+
+## **3. OpenVPN Bağlantısını Test Etme ve Hata Ayıklama**
+Bağlantının başarılı olup olmadığını anlamak için aşağıdaki komutları kullanabilirsiniz.
+
+### **3.1. OpenVPN Bağlantı Durumunu Kontrol Etme**
+```bash
+ip a | grep tun0
+```
+**Çıktı:**
+```
+5: tun0: <POINTOPOINT,MULTICAST,UP,LOWER_UP> mtu 1500
+    inet 10.8.0.2/24 scope global tun0
+```
+Eğer **tun0 arayüzü görünmüyorsa, VPN bağlantısı başarısız olmuş demektir.**
+
+---
+
+### **3.2. VPN ile Yeni IP Adresi Aldığınızı Kontrol Etme**
+```bash
+curl ifconfig.me
+```
+Bu komut, **şu anki IP adresinizi gösterir**.  
+Eğer OpenVPN çalışıyorsa, **VPN sunucusunun IP’si görünmelidir**.
+
+---
+
+### **3.3. OpenVPN Loglarını İnceleme**
+VPN bağlantısında hata olup olmadığını görmek için:
+```bash
+sudo journalctl -u openvpn@server --no-pager | tail -n 50
+```
+**Alternatif olarak:**
+```bash
+cat /var/log/openvpn.log
+```
+
+---
+
+## **4. OpenVPN Güvenlik Duvarı (UFW) Kuralları**
+Eğer OpenVPN bağlantısının çalışması için **güvenlik duvarında izin vermeniz gerekiyorsa**, aşağıdaki kuralları uygulayın:
+
+```bash
+sudo ufw allow 1194/udp
+sudo ufw allow OpenSSH
+```
+Eğer TCP modunda çalışıyorsanız:
+```bash
+sudo ufw allow 1194/tcp
+```
+
+✅ **UFW durumunu kontrol etmek için:**
+```bash
+sudo ufw status
+```
+
+---
+
+## **5. OpenVPN İçin Gelişmiş Kullanımlar**
+### **5.1. Tüm Trafiği VPN Üzerinden Yönlendirme (Kill Switch)**
+Eğer yalnızca VPN bağlantısı üzerinden internet erişimi sağlamak istiyorsanız:
+```bash
+sudo ufw deny out to any
+sudo ufw allow out on tun0
+```
+Bu ayar, **VPN koparsa internet bağlantınızı da keser**, böylece IP’niz açığa çıkmaz.
+
+---
+
+## **Sonuç**
+Bu rehberde, **OpenVPN ile bağlantı kurma, yönetme, test etme ve güvenliğini sağlama** konularını **çok detaylı** bir şekilde ele aldık. 🚀  
+---
+
 ## Try-Hack-Me Sitesi (https://tryhackme.com/)
 ```sh 
 
@@ -514,6 +960,58 @@ TryHackMe, **siber güvenlik öğrenmek isteyen herkes için harika bir başlang
 
 🚀 Eğer **siber güvenliğe ilginiz varsa, TryHackMe kesinlikle denemeniz gereken bir platformdur!**
 
+
+
+## Kali Linux Etik Hack
+```sh 
+
+```
+---
+https://tryhackme.com/dashboard  44
+Step-1 Register olmak
+Step-2 https://tryhackme.com/access
+Step-3 indirilen  ovpn dosyasını çalıştırmak
+$ openvpn --version
+$ sudo apt update && sudo apt install openvpn -y
+$ openvpn --version
+$ cd ~/Desktop
+$ mkdir TryHackme
+$ mv ~/Downloads/pythonsoftware.ovpn ~/Desktop/TryHackme
+
+Step-4
+**Aşağıdaki komutlardan bir tanesini çalıştırabilirsibiz**
+$ sudo openvpn --config ~/Desktop/TryHackme/pythonsoftware.ovpn           (Arka planda çalışmaz)
+VEYA
+$ sudo openvpn --config ~/Desktop/TryHackme/pythonsoftware.ovpn & disown  (Arka planda çalışsın)
+VEYA
+$ sudo openvpn --config ~/Documents/pythonsoftware.ovpn --dev tun0         (UI Olan)
+
+
+Step-5
+UFW(Uncompicated Firewall)
+$ sudo apt update && sudo apt install ufw -y
+$ sudo ufw status
+$ dpkg -l | grep ufw
+
+$ sudo ufw allow out on tun0
+$ sudo ufw allow out 1194/udp
+$ ip a | grep tun0
+
+Step-6
+$ curl ifconfig.me
+$ ip route
+
+Step-7
+
+## Kali Linux
+```sh 
+
+```
+---
+
+
+
+
 ## ifconfig(Eskidi)
 ```sh 
 
@@ -573,7 +1071,7 @@ inet 192.168.1.100  netmask 255.255.255.0  broadcast 192.168.1.255
 ```
 - **`inet 192.168.1.100`** → Bu cihazın IPv4 adresi.
 - **`netmask 255.255.255.0`** → Alt ağ maskesi.
-    - **255.255.255.0** → 192.168.1.0/24 ağında olduğunu gösterir (256 adres içerir).
+  - **255.255.255.0** → 192.168.1.0/24 ağında olduğunu gösterir (256 adres içerir).
 - **`broadcast 192.168.1.255`** → Ağdaki tüm cihazlara yayın yapmak için kullanılan adres.
 
 ---
@@ -667,8 +1165,6 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
   ip link show
   ```
 
-Eğer özel bir ağ konfigürasyonu hakkında daha fazla detay isterseniz, belirtin! 🚀
-
 ## Ağ Hakkında Bilgi
 ```sh 
 
@@ -755,62 +1251,6 @@ smbclient -L //10.10.10.10
 veya NetBIOS bilgisi için:
 ```bash
 nbtscan 10.10.10.10
-```
----
-
-## Open VPN 
-```sh 
-
-```
----
-
-## Kali Linux Etik Hack
-```sh 
-
-```
----
-https://tryhackme.com/dashboard  44
-Step-1 Register olmak
-Step-2 https://tryhackme.com/access
-Step-3 indirilen  ovpn dosyasını çalıştırmak
-$ openvpn --version
-$ sudo apt update && sudo apt install openvpn -y
-$ openvpn --version
-$ cd ~/Desktop
-$ mkdir TryHackme
-$ mv ~/Downloads/pythonsoftware.ovpn ~/Desktop/TryHackme
-$ sudo openvpn --config ~/Desktop/TryHackme/pythonsoftware.ovpn  (ARka planda çalışmaz)
-$ sudo openvpn --config ~/Desktop/TryHackme/pythonsoftware.ovpn & disown  (Arka planda çalışsın)
-
-## Kali Linux
-```sh 
-
-```
----
-
-## Kali Linux
-```sh 
-
-```
----
-
-## Kali Linux
-```sh 
-
-```
----
-
-
-## Kali Linux
-```sh 
-
-```
----
-
-
-## Kali Linux
-```sh 
-
 ```
 ---
 
