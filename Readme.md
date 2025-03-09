@@ -991,7 +991,7 @@ Step-5
 UFW(Uncompicated Firewall)
 $ sudo apt update && sudo apt install ufw -y
 $ sudo ufw status
-$ dpkg -l | grep ufw
+$ c
 
 $ sudo ufw allow out on tun0
 $ sudo ufw allow out 1194/udp
